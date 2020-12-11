@@ -4,13 +4,17 @@ using namespace std;//nao precisar usar std::
 int escolha;//escolha do usario
 ll p,q,e,n,chaven,chavee,fi;//inteiros primos p e q e o expoente e primo em relacao a (p-1)*(q-1) e o n que forma a chave publica junto com o e
 string mensagem,mensageme,mensagemd;
-ll inv(ll a, ll b){ //calcula o inverso em (n)
-    ll k,x;
-    while((b*k+1)%a!=0){
-        k++;
+ll inv(ll a, ll b, ll & x, ll & y) {//encontra o inverso
+    if (a == 0) {
+        x = 0;
+        y = 1;
+        return b;
     }
-    x = (b*k+1)/a;
-    return x;
+    ll x1, y1;
+    ll d = inv(b % a, a, x1, y1);
+    x = y1 - (b / a) * x1;
+    y = x1;
+    return d;
 }
 long long mod(long long a, long long b, long long m) {// calcula o inverso do modulo em uma exponencial de forma (log n) 
     a %= m;
@@ -23,7 +27,7 @@ long long mod(long long a, long long b, long long m) {// calcula o inverso do mo
     }
     return res;
 }
-void encriptar(){
+void encriptar(){//encripta a mensagem
     for(auto a: mensagem){
         ll b = (ll)(a) - 63;
         b = mod(b,chavee,chaven);
@@ -31,12 +35,14 @@ void encriptar(){
     }
     return;
 }
-void desencriptar(){
+void desencriptar(){//desencripta a mensagem
     fi = (p-1)*(q-1);
-    ll d = inv(e,fi);// d para chave privada que eh o inverso mult de e mod fi
+    ll x,y;
+    inv(e,fi,x,y);
+    ll d = x;// d para chave privada que eh o inverso mult de e mod fi
     for(auto k : mensageme){
         ll b = (ll)(k) - 63;
-        b = mod(b,d,chaven);
+        b = mod(b,d,n);
         mensagemd += (char)(b+63);
     }
     return;
@@ -74,13 +80,15 @@ int main(){//funcao principal
             cin>>q;
             cout<<"Digite o expoente>";
             cin>>e;
+            desencriptar();
             ofstream out("msgdesencriptada.txt");
             out<<"Mensagem Desencriptada: "<<mensagemd;
             out.close();
             cout<<"Gerada a mensagem desencriptada, verifique em msgdesencripatada.txt"<<endl;
-        }else{ 
             cout<<"goodbye!";
             return 0;
+        }else{ 
+            cout<<"Digite um valor entre 1 e 3\n";
         }
     }
     return 0;
