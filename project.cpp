@@ -29,9 +29,15 @@ long long mod(long long a, long long b, long long m) {// calcula o inverso do mo
 }
 void encriptar(){//encripta a mensagem
     for(auto a: mensagem){
-        ll b = (ll)(a) - 63;
-        b = mod(b,chavee,chaven);
-        mensageme += (char)(b+63);
+        if(a==' '){
+            ll b = 28;
+            b = mod(b,chavee,chaven);
+            mensageme += (char)(b+63);
+        }else{
+            ll b = (ll)(a) - 63;
+            b = mod(b,chavee,chaven);
+            mensageme += (char)(b+63);
+        }
     }
     return;
 }
@@ -43,7 +49,11 @@ void desencriptar(){//desencripta a mensagem
     for(auto k : mensageme){
         ll b = (ll)(k) - 63;
         b = mod(b,d,n);
-        mensagemd += (char)(b+63);
+        if(b==28){
+            mensagemd += ' ';
+        }else{
+            mensagemd += (char)(b+63);
+        }
     }
     return;
 }
@@ -65,7 +75,8 @@ int main(){//funcao principal
             cout<<"Gerada chave publica, verifique em chavep.txt"<<endl;
         }else if(escolha == 2){//encriptar
             cout<<"Digite a mensagem a encriptar: ";
-            cin>>mensagem;
+            cin.ignore();
+            getline(cin,mensagem);
             cout<<"Digite a chave publica, dada anteriormente(os dois valores): ";
             cin>>chaven>>chavee;
             encriptar();
