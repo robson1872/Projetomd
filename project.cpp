@@ -3,7 +3,8 @@
 using namespace std;//nao precisar usar std::
 int escolha;//escolha do usario
 ll p,q,e,n,chaven,chavee,fi;//inteiros primos p e q e o expoente e primo em relacao a (p-1)*(q-1) e o n que forma a chave publica junto com o e
-string mensagem,mensageme,mensagemd;
+string mensagem,mensageme,mensagemd,mm;
+vector<ll> ks;
 ll inv(ll a, ll b, ll & x, ll & y) {//encontra o inverso
     if (a == 0) {
         x = 0;
@@ -16,7 +17,7 @@ ll inv(ll a, ll b, ll & x, ll & y) {//encontra o inverso
     y = x1;
     return d;
 }
-long long mod(long long a, long long b, long long m) {// calcula o inverso do modulo em uma exponencial de forma (log n) 
+long long mod(long long a, long long b, long long m) {// calcula o modulo em uma exponencial de forma (log n) 
     a %= m;
     long long res = 1;
     while (b > 0) {
@@ -32,11 +33,16 @@ void encriptar(){//encripta a mensagem
         if(a==' '){
             ll b = 28;
             b = mod(b,chavee,chaven);
-            mensageme += (char)(b+63);
+            ll k = b;
+            mm+=to_string(k)+' ';
+            ks.push_back(b);
         }else{
-            ll b = (ll)(a) - 63;
+            ll b =  a - 0;
+            b-=63;
             b = mod(b,chavee,chaven);
-            mensageme += (char)(b+63);
+            ll k = b;
+            mm+=to_string(k)+' ';
+            ks.push_back(b);
         }
     }
     return;
@@ -46,11 +52,10 @@ void desencriptar(){//desencripta a mensagem
     ll x,y;
     inv(e,fi,x,y);
     ll d = x;// d para chave privada que eh o inverso mult de e mod fi
-    for(auto k : mensageme){
-        ll b = (ll)(k) - 63;
-        b = mod(b,d,n);
+    for(auto k : ks){
+        ll b = mod(k,d,n);
         if(b==28){
-            mensagemd += ' ';
+            mensagemd +=' ';
         }else{
             mensagemd += (char)(b+63);
         }
@@ -81,7 +86,7 @@ int main(){//funcao principal
             cin>>chaven>>chavee;
             encriptar();
             ofstream out("msgencriptada.txt");
-            out<<"Mensagem Encriptada: "<<mensageme;
+            out<<"Mensagem Encriptada: "<<mm;
             out.close();
             cout<<"Gerada a mensagem encriptada, verifique em msgencripatada.txt"<<endl;
         }else if(escolha == 3){ //desencriptar
