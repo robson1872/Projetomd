@@ -71,7 +71,7 @@ int main(){//funcao principal
             cin>>p;
             cout<<"Digite outro Primo:";
             cin>>q;
-            cout<<"Digite o expoente>";
+            cout<<"Digite o expoente:";
             cin>>e;
             n = p*q;
             ofstream out("chavep.txt");
