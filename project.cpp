@@ -51,7 +51,7 @@ void desencriptar(){//desencripta a mensagem
     fi = (p-1)*(q-1);
     ll x,y;
     inv(e,fi,x,y);
-    ll d = x;// d para chave privada que eh o inverso mult de e mod fi
+    ll d = (x % fi + fi)% fi;// d para chave privada que eh o inverso mult de e mod fi
     for(auto k : ks){
         ll b = mod(k,d,n);
         if(b==28){
